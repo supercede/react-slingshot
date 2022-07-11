@@ -11,19 +11,30 @@ jobs:
       - checkout
       - run: npm i
       - run: npm run lint
+      - save_cache:
+          key: "npm-modules"
+          path: "/node_modules"
 
   test:
     <<: *defaults
     steps:
       - checkout
-      - run: npm i
+      - restore_cache:
+          key: "npm-modules"
+      # - run: npm i
       - run: npm run open:cover
 
   analyze:
     <<: *defaults
     steps:
       - checkout
+      - restore_cache:
+          key: "npm-modules"
       - run: npm audit
+      - run:
+          name: "Fix Audit Errors"
+          command: npm audit fix
+          when: on_fail
 
 workflows:
   my_workflow:
