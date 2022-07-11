@@ -11,25 +11,18 @@ jobs:
       - checkout
       - run: npm i
       - run: npm run lint
-      - save_cache:
-          key: "npm-modules"
-          path: "/node_modules"
 
   test:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          key: "npm-modules"
-      # - run: npm i
-      - run: npm run open:cover
+      - run: npm i
+      - run: npm run test:CI
 
   analyze:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          key: "npm-modules"
       - run: npm audit
       - run:
           name: "Fix Audit Errors"
